@@ -15,6 +15,7 @@ type Article struct {
 	Tags  []string `json:"tags"`
 }
 
+// Represents data about a tag.
 type TagData struct {
 	Tag         string   `json:"id"`
 	Count       float64  `json:"title"`
@@ -22,8 +23,9 @@ type TagData struct {
 	RelatedTags []string `json:"related_tags"`
 }
 
-var articles = []Article{
-	{
+// Articles variable
+var articles = map[string]Article{
+	"1": {
 		ID:    "1",
 		Title: "latest science shows that potato chips are better for you than sugar",
 		Date:  "2016-09-22",
@@ -32,15 +34,39 @@ var articles = []Article{
 	},
 }
 
-var tags = []TagData{}
-
-// Responds with the list of all articles as JSON.
-func getArticles(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, articles)
+// Tags variable
+var tags = []TagData{
+	{
+		Tag:         "health",
+		Count:       1,
+		Articles:    []string{"1"},
+		RelatedTags: []string{"science", "fitness"},
+	},
 }
 
-// Adds an article from JSON received in the request body.
-func postArticles(c *gin.Context) {
+// Responds with an Article with the given id.
+func getArticleByID(id string) (Article, bool) {
+	article, exists := articles[id]
+	return article, exists
+}
+
+func getArticleHandler(c *gin.Context) {
+	// Extract the ID from the URL path
+	id := c.Param("id")
+
+	// Fetch the article by ID
+	article, exists := getArticleByID(id)
+	if !exists {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Article not found"})
+		return
+	}
+
+	// Return the article as JSON
+	c.JSON(http.StatusOK, article)
+}
+
+// Post an article to the API from JSON in the request body.
+func postArticleHandler(c *gin.Context) {
 	var newArticle Article
 
 	// Call BindJSON to bind the received JSON to
@@ -50,7 +76,7 @@ func postArticles(c *gin.Context) {
 	}
 
 	// Add the new article to the slice.
-	articles = append(articles, newArticle)
+	articles[newArticle.ID] = newArticle
 	c.IndentedJSON(http.StatusCreated, newArticle)
 }
 
@@ -64,14 +90,14 @@ func main() {
 	// Set up router
 	router := gin.Default()
 
-	// Gets articles from the API
-	router.GET("/articles", getArticles)
+	// Gets article with a specific id from the API
+	router.GET("/articles/:id", getArticleHandler)
 
 	// Posts articles to the API
-	router.POST("/articles", postArticles)
+	router.POST("/articles", postArticleHandler)
 
-	// Gets tags from the API
-	router.GET("/tags", getTags)
+	// Gets tag with a specific tag name from the API
+	router.GET("/tags/:tagName/:date", getTags)
 
 	// Runs the server
 	router.Run("localhost:8080")
