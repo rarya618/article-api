@@ -1,31 +1,19 @@
 package main
 
 import (
+	"strconv"
+
+	"github.com/rarya618/article-api/dataTypes"
+	"github.com/rarya618/article-api/utils"
+
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-// Represents data about an article.
-type Article struct {
-	ID    string   `json:"id"`
-	Title string   `json:"title"`
-	Date  string   `json:"date"`
-	Body  string   `json:"body"`
-	Tags  []string `json:"tags"`
-}
-
-// Represents data about a tag.
-type TagData struct {
-	Tag         string   `json:"id"`
-	Count       float64  `json:"title"`
-	Articles    []string `json:"articles"`
-	RelatedTags []string `json:"related_tags"`
-}
-
-// Articles variable
-var articles = map[string]Article{
-	"1": {
+// Current Articles variable
+var current_articles = map[int]dataTypes.Article{
+	1: {
 		ID:    "1",
 		Title: "latest science shows that potato chips are better for you than sugar",
 		Date:  "2016-09-22",
@@ -34,28 +22,12 @@ var articles = map[string]Article{
 	},
 }
 
-// Tags variable
-var tags = []TagData{
-	{
-		Tag:         "health",
-		Count:       1,
-		Articles:    []string{"1"},
-		RelatedTags: []string{"science", "fitness"},
-	},
-}
-
-// Responds with an Article with the given id.
-func getArticleByID(id string) (Article, bool) {
-	article, exists := articles[id]
-	return article, exists
-}
-
 func getArticleHandler(c *gin.Context) {
 	// Extract the ID from the URL path
 	id := c.Param("id")
 
 	// Fetch the article by ID
-	article, exists := getArticleByID(id)
+	article, exists := utils.GetArticleByID(current_articles, id)
 	if !exists {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Article not found"})
 		return
@@ -67,7 +39,7 @@ func getArticleHandler(c *gin.Context) {
 
 // Post an article to the API from JSON in the request body.
 func postArticleHandler(c *gin.Context) {
-	var newArticle Article
+	var newArticle dataTypes.Article
 
 	// Call BindJSON to bind the received JSON to
 	// newArticle.
@@ -75,13 +47,27 @@ func postArticleHandler(c *gin.Context) {
 		return
 	}
 
+	// Get int from string
+	idInt, err := strconv.Atoi(newArticle.ID)
+
+	// If error occurs, return
+	if err != nil {
+		return
+	}
+
 	// Add the new article to the slice.
-	articles[newArticle.ID] = newArticle
+	current_articles[idInt] = newArticle
 	c.IndentedJSON(http.StatusCreated, newArticle)
 }
 
 // Responds with the list of all tags as JSON.
-func getTags(c *gin.Context) {
+func getTagHandler(c *gin.Context) {
+	// Extract params from the URL path
+	tagName := c.Param("tagName")
+	date := c.Param("date")
+
+	tags := utils.GetTagData(current_articles, tagName, date)
+
 	c.IndentedJSON(http.StatusOK, tags)
 }
 
@@ -97,7 +83,7 @@ func main() {
 	router.POST("/articles", postArticleHandler)
 
 	// Gets tag with a specific tag name from the API
-	router.GET("/tags/:tagName/:date", getTags)
+	router.GET("/tags/:tagName/:date", getTagHandler)
 
 	// Runs the server
 	router.Run("localhost:8080")

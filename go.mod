@@ -1,4 +1,4 @@
-module article-api
+module github.com/rarya618/article-api
 
 go 1.22.5
 
