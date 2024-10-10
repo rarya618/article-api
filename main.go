@@ -75,9 +75,15 @@ func getTagHandler(c *gin.Context) {
 	tagName := c.Param("tagName")
 	date := c.Param("date")
 
+	// If tagname is not provided
+	if len(tagName) == 0 {
+		c.IndentedJSON(http.StatusNotAcceptable, gin.H{"error": "Tag name not provided"})
+		return
+	}
+
 	// If date string is not 8 characters long
 	if len(date) != 8 {
-		c.IndentedJSON(http.StatusNotAcceptable, gin.H{"error": "Date not correctly formatted"})
+		c.IndentedJSON(http.StatusNotAcceptable, gin.H{"error": "Invalid date: should have exactly 8 characters"})
 		return
 	}
 
