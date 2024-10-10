@@ -4,6 +4,22 @@ import (
 	"github.com/rarya618/article-api/dataTypes"
 )
 
+// Removes duplicates from a slice of strings
+func removeDuplicates(tags []string) []string {
+	// Create a map to store unique elements
+	seen := make(map[string]bool)
+	result := []string{}
+
+	// Loop through the slice, adding elements to the map if they haven't been seen before
+	for _, val := range tags {
+		if _, ok := seen[val]; !ok {
+			seen[val] = true
+			result = append(result, val)
+		}
+	}
+	return result
+}
+
 // Gets tag data from a list of current articles
 func GetTagData(current_articles map[int]dataTypes.Article, tagName string, date string) dataTypes.TagData {
 	// Initialise tag data
@@ -38,6 +54,9 @@ func GetTagData(current_articles map[int]dataTypes.Article, tagName string, date
 			}
 		}
 	}
+
+	// remove duplicates from related-tags
+	tagData.RelatedTags = removeDuplicates(tagData.RelatedTags)
 
 	return tagData
 }

@@ -12,7 +12,7 @@ type Article struct {
 // Represents data about a tag.
 type TagData struct {
 	Tag         string   `json:"id"`
-	Count       float64  `json:"title"`
+	Count       float64  `json:"count"`
 	Articles    []string `json:"articles"`
 	RelatedTags []string `json:"related_tags"`
 }
