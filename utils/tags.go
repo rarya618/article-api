@@ -1,17 +1,8 @@
 package utils
 
-import "github.com/rarya618/article-api/dataTypes"
-
-// Converts YYYYMMDD to YYYY-MM-DD
-func FormatDate(oldDateFormat string) string {
-	newDate := ""
-	// if date string is not 8 characters long
-	if len(oldDateFormat) != 8 {
-		return ""
-	}
-
-	return newDate
-}
+import (
+	"github.com/rarya618/article-api/dataTypes"
+)
 
 // Gets tag data from a list of current articles
 func GetTagData(current_articles map[int]dataTypes.Article, tagName string, date string) dataTypes.TagData {
@@ -27,16 +18,19 @@ func GetTagData(current_articles map[int]dataTypes.Article, tagName string, date
 		currentArticle := current_articles[i]
 
 		// Loop through tags in current article
-		for j := 0; i < len(currentArticle.Tags); j++ {
+		for j := 0; j < len(currentArticle.Tags); j++ {
 			// Initialise current tag
 			currentTag := currentArticle.Tags[j]
 
 			// If tag name matches
 			if tagName == currentTag {
 				// If date matches
-				if FormatDate(date) == currentArticle.Date {
+				if date == currentArticle.Date {
 					// Append Article ID to tag Articles list
 					tagData.Articles = append(tagData.Articles, currentArticle.ID)
+
+					// Append related tags (currently appends all tags without checking for duplicates)
+					tagData.RelatedTags = append(tagData.RelatedTags, currentArticle.Tags...)
 
 					// Increment count
 					tagData.Count += 1

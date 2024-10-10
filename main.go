@@ -22,6 +22,15 @@ var current_articles = map[int]dataTypes.Article{
 	},
 }
 
+// Converts YYYYMMDD to YYYY-MM-DD
+func FormatDate(oldDateFormat string) string {
+	newDate := ""
+	// Sample for testing purposes
+	newDate = "2016-09-22"
+
+	return newDate
+}
+
 func getArticleHandler(c *gin.Context) {
 	// Extract the ID from the URL path
 	id := c.Param("id")
@@ -60,15 +69,25 @@ func postArticleHandler(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, newArticle)
 }
 
-// Responds with the list of all tags as JSON.
+// Responds with the tag as JSON.
 func getTagHandler(c *gin.Context) {
 	// Extract params from the URL path
 	tagName := c.Param("tagName")
 	date := c.Param("date")
 
-	tags := utils.GetTagData(current_articles, tagName, date)
+	// If date string is not 8 characters long
+	if len(date) != 8 {
+		c.IndentedJSON(http.StatusNotAcceptable, gin.H{"error": "Date not correctly formatted"})
+		return
+	}
 
-	c.IndentedJSON(http.StatusOK, tags)
+	// Format the date
+	formattedDate := FormatDate(date)
+
+	// Pass in the tag name and formatted date to get tag data
+	tag := utils.GetTagData(current_articles, tagName, formattedDate)
+
+	c.IndentedJSON(http.StatusOK, tag)
 }
 
 // The main function
