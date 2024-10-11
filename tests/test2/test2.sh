@@ -1,8 +1,7 @@
 # TEST 2: Posting three articles to the API
 # Checks:
-# - If the API accepts a standard article through the POST request
-# - If the API returns the same article through the GET request
-
+# - If the API accepts multiple standard article through POST requests
+# - If the API returns correct articles through the GET requests
 
 # Expected output for the three input files
 expectedOutput1=$(cat input1.json)

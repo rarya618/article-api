@@ -1,0 +1,13 @@
+{
+    "id": "wellness",
+    "count": 2,
+    "articles": [
+        "2",
+        "3"
+    ],
+    "related_tags": [
+        "health",
+        "fitness",
+        "science"
+    ]
+}

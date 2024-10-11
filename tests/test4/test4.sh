@@ -1,14 +1,15 @@
-# TEST 1: Posting one article to the API
+# TEST 4: Posting one article to the API and getting one tag
 # Checks:
 # - If the API accepts a standard article through the POST request
 # - If the API returns the same article through the GET request
+# - If the API returns the correct tag data through the GET request
 
 
 # Expected output for both checks
 expectedOutput=$(cat input.json)
 expectedTagOutput=$(cat output.json)
 
-# The actual outputs received
+# Actual outputs received
 postOutput=$(curl -s -d @input.json -X POST http://localhost:8080/articles)
 getOutput=$(curl -s -X GET http://localhost:8080/articles/2)
 tagOutput=$(curl -s -X GET http://localhost:8080/tags/fitness/20181022)

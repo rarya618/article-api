@@ -56,8 +56,8 @@ NOTE: The server needs to be running independently and has to be restarted befor
 
 ### Test 2: Posting three articles to the API
 #### Checks
-- If the API accepts a standard article through the POST request
-- If the API returns the same article through the GET request
+- If the API accepts multiple standard article through POST requests
+- If the API returns correct articles through the GET requests
 
 ### Test 3: Posting article with existing ID
 #### Checks
@@ -68,4 +68,10 @@ NOTE: The server needs to be running independently and has to be restarted befor
 #### Checks
 - If the API accepts a standard article through the POST request
 - If the API returns the same article through the GET request
+- If the API returns the correct tag data through the GET request
+
+### Test 5: Posting multiple articles on the same date to the API and getting one tag
+#### Checks:
+- If the API accepts multiple standard article through POST requests
+- If the API returns correct articles through the GET requests
 - If the API returns the correct tag data through the GET request
