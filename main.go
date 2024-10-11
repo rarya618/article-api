@@ -121,9 +121,21 @@ func getTagHandler(c *gin.Context) {
 
 	dateInt, dateErr := strconv.Atoi(date)
 
-	// If date is not a valid integer, greater than 0, has 8 digits
-	if dateErr != nil || dateInt <= 0 || dateInt > 10000000 {
+	// If date is not a valid integer
+	if dateErr != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Invalid date: should be a valid number"})
+		return
+	}
+
+	// If date is not greater than 0
+	if dateInt <= 0 {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Invalid date: should be greater than 0"})
+		return
+	}
+
+	// If date does not have 8 digits
+	if dateInt < 1000000 {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Invalid date: should be 8 digits"})
 		return
 	}
 

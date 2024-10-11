@@ -13,6 +13,8 @@ If you run into permission issues, run:
 ## Description
 The main language used to build this API is Golang. It was chosen because of its simplicity. It would be easier to extend and maintain in the future.
 
+Considering efficiency, the code runs in O(n^2) time.
+
 ## Endpoints
 - POST `/articles` handles the receipt of some article data in json format, and store it within the service.
 - GET `/articles/{id}` returns the JSON representation of the article.
@@ -20,8 +22,7 @@ The main language used to build this API is Golang. It was chosen because of its
 
 ## Assumptions
 - The API only accepts and responds with JSON objects.
-- Considering efficiency, the code runs in O(n^2) time.
-- The API requests received will be in continuous (no breaks) and increasing order of id.
+- The API requests received will be in continuous (no breaks) and increasing order of id i.e. 1, 2, 3,...
 - The articles are not subject to deletion.
 - Each POST request only contains one article.
 - The articles are posted in order of chronological order of dates (earliest comes first)
@@ -34,6 +35,8 @@ The API is meant to respond with JSON objects, so the errors are also thrown as 
 - Invalid tag: Tag name not provided (Error 400)
 - Invalid date: should have exactly 8 characters (Error 400)
 - Invalid date: should be a valid number (Error 400)
+- Invalid date: should be greater than 0 (Error 400)
+- Invalid date: should be 8 digits (Error 400)
 - Invalid date: year invalid (Error 400)
 - Invalid date: month invalid (Error 400)
 - Invalid date: day invalid (Error 400)
@@ -60,3 +63,9 @@ NOTE: The server needs to be running independently and has to be restarted befor
 #### Checks
 - If the API returns a valid error after the POST request
 - If the API returns the correct article through the GET request
+
+### Test 4: Posting one article to the API and getting one tag
+#### Checks
+- If the API accepts a standard article through the POST request
+- If the API returns the same article through the GET request
+- If the API returns the correct tag data through the GET request
