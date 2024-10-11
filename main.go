@@ -31,14 +31,20 @@ func FormatDate(oldDateFormat string) string {
 	return newDate
 }
 
+// Gets an article with the given ID
 func getArticleHandler(c *gin.Context) {
 	// Extract the ID from the URL path
 	id := c.Param("id")
 
 	// Fetch the article by ID
-	article, exists := utils.GetArticleByID(current_articles, id)
+	article, exists, message := utils.GetArticleByID(current_articles, id)
 	if !exists {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Article not found"})
+		if message == "" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Article not found"})
+		} else {
+			// Message received indicates that the request is not valid
+			c.JSON(http.StatusBadRequest, gin.H{"error": message})
+		}
 		return
 	}
 
@@ -59,8 +65,9 @@ func postArticleHandler(c *gin.Context) {
 	// Get int from string
 	idInt, err := strconv.Atoi(newArticle.ID)
 
-	// If error occurs, return
+	// If error occurs, send error response and return
 	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": error.Error})
 		return
 	}
 
