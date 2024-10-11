@@ -21,9 +21,10 @@ The main language used to build this API is Golang. It was chosen because of its
 ## Assumptions
 - The API only accepts and responds with JSON objects.
 - Considering efficiency, the code runs in O(n^2) time.
-- The API requests received will be in continuous order.
+- The API requests received will be in continuous (no breaks) and increasing order of id.
 - The articles are not subject to deletion.
 - Each POST request only contains one article.
+- The articles are posted in order of chronological order of dates (earliest comes first)
 
 ## Error Handling
 The API is meant to respond with JSON objects, so the errors are also thrown as JSON objects.
@@ -31,7 +32,7 @@ The API is meant to respond with JSON objects, so the errors are also thrown as 
 ### List of errors
 - Tag name not provided (Error 400)
 - Invalid date: should have exactly 8 characters (Error 400)
-- Invalid Article ID: should have a unique article id (Error 400)
+- Invalid Article ID: should have a unique Article ID (Error 400)
 - Invalid Article ID: Article ID needs to be a number (Error 400)
 - Article not found (Error 404)
 

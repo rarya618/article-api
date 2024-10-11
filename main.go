@@ -71,9 +71,17 @@ func postArticleHandler(c *gin.Context) {
 		return
 	}
 
-	// Add the new article to the slice.
-	current_articles[idInt] = newArticle
-	c.IndentedJSON(http.StatusCreated, newArticle)
+	// Add the new article
+	isSuccessful, message := utils.AddArticle(current_articles, idInt, newArticle)
+
+	// If adding successful
+	if isSuccessful {
+		c.IndentedJSON(http.StatusCreated, newArticle)
+	} else {
+		// Throw error if adding fails
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": message})
+	}
+
 }
 
 // Responds with the tag as JSON.

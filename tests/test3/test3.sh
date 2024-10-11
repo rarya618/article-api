@@ -1,20 +1,20 @@
 postOutput=$(curl -s -d @input.json -X POST http://localhost:8080/articles)
-postExpectedOutput=$(cat input.json)
+postExpectedOutput=$(cat postOutput.json)
 
-getOutput=$(curl -s -X GET http://localhost:8080/articles/2)
-getExpectedOutput=$(cat input.json)
+getOutput=$(curl -s -X GET http://localhost:8080/articles/1)
+getExpectedOutput=$(cat getOutput.json)
 
 # Compare the outputs
 if ! echo "$postOutput" | jq --sort-keys . | diff - <(echo "$postExpectedOutput" | jq --sort-keys .); then
-    echo "POST check failed: returned incorrect article"
-    echo "Test 1 failed"
+    echo "POST check failed: unexpected response"
+    echo "Test 3 failed"
 else
-    echo "POST check passed: returned correct article"
+    echo "POST check passed: valid error thrown"
     if ! echo "$getOutput" | jq --sort-keys . | diff - <(echo "$getExpectedOutput" | jq --sort-keys .); then
         echo "GET test failed: returned incorrect article"
-        echo "Test 1 failed"
+        echo "Test 3 failed"
     else
-        echo "GET check passed: returned correct article"
-        echo "Test 1 successful"
+        echo "GET check passed: returned original article"
+        echo "Test 3 successful"
     fi
 fi

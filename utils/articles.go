@@ -18,5 +18,15 @@ func GetArticleByID(current_articles map[int]dataTypes.Article, id string) (data
 
 	article, exists := current_articles[idInt]
 	return article, exists, ""
+}
 
+func AddArticle(current_articles map[int]dataTypes.Article, idInt int, newArticle dataTypes.Article) (bool, string) {
+	// Check if Article ID is unique
+	if current_articles[idInt].ID == newArticle.ID {
+		return false, "Invalid Article ID: should have a unique Article ID"
+	}
+
+	// Add the new article to the slice.
+	current_articles[idInt] = newArticle
+	return true, ""
 }
