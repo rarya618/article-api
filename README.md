@@ -58,6 +58,14 @@ Each test will run a set of checks and if all the checks pass, the test is succe
 
 NOTE: The server needs to be running independently and has to be restarted before every test.
 
+### Running tests:
+To run the tests on Mac:
+- change into each test directory in a Terminal window separate from the server
+- run `./test{INSERT_TEST_NUMBER_HERE}.sh`
+
+If you run into permission issues, run:
+- `chmod +x ./test{INSERT_TEST_NUMBER_HERE}.sh`
+
 ### Test 1: Posting one article to the API
 #### Checks
 - If the API accepts a standard article through the POST request
