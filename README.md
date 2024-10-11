@@ -25,19 +25,26 @@ The main language used to build this API is Golang. It was chosen because of its
 - The articles are not subject to deletion.
 - Each POST request only contains one article.
 - The articles are posted in order of chronological order of dates (earliest comes first)
+- Every article posted is of the correct format, containing all fields in the correct data type
 
 ## Error Handling
 The API is meant to respond with JSON objects, so the errors are also thrown as JSON objects.
 
 ### List of errors
-- Tag name not provided (Error 400)
+- Invalid tag: Tag name not provided (Error 400)
 - Invalid date: should have exactly 8 characters (Error 400)
+- Invalid date: should be a valid number (Error 400)
+- Invalid date: year invalid (Error 400)
+- Invalid date: month invalid (Error 400)
+- Invalid date: day invalid (Error 400)
 - Invalid Article ID: should have a unique Article ID (Error 400)
 - Invalid Article ID: Article ID needs to be a number (Error 400)
 - Article not found (Error 404)
 
 ## Tests
 Each test will run a set of checks and if all the checks pass, the test is successful.
+
+NOTE: The server needs to be running independently and has to be restarted before every test
 
 ### Test 1: Posting one article to the API
 #### Checks

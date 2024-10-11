@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/rarya618/article-api/dataTypes"
@@ -22,13 +23,29 @@ var current_articles = map[int]dataTypes.Article{
 	},
 }
 
-// Converts YYYYMMDD to YYYY-MM-DD
-func FormatDate(oldDateFormat string) string {
-	newDate := ""
-	// Sample for testing purposes
-	newDate = "2016-09-22"
+// Returns characters from strings using index
+// Reference: https://www.tutorialspoint.com/golang-program-to-get-characters-from-a-string-using-the-index
+func GetChar(str string, index int) rune {
+	return []rune(str)[index]
+}
 
-	return newDate
+// Converts YYYYMMDD to YYYY-MM-DD, returns blank value and message if failed
+func FormatDate(oldDateFormat string) (string, string) {
+	year := oldDateFormat[:4]
+	month := oldDateFormat[4:6]
+	day := oldDateFormat[6:]
+
+	// If year, month, day is not a valid integer, greater than 0, has 8 digits
+	if yearInt, yearErr := strconv.Atoi(year); yearErr != nil || yearInt <= 0 {
+		return "", "Invalid date: year invalid"
+	} else if monthInt, monthErr := strconv.Atoi(month); monthErr != nil || monthInt <= 0 {
+		return "", "Invalid date: month invalid"
+	} else if dayInt, dayErr := strconv.Atoi(day); dayErr != nil || dayInt <= 0 {
+		return "", "Invalid date: day invalid"
+	}
+
+	// If no issues, return normal date
+	return fmt.Sprintf("%s-%s-%s", year, month, day), ""
 }
 
 // Gets an article with the given ID
@@ -90,7 +107,7 @@ func getTagHandler(c *gin.Context) {
 	tagName := c.Param("tagName")
 	date := c.Param("date")
 
-	// If tagname is not provided
+	// If tagName is not provided
 	if len(tagName) == 0 {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Tag name not provided"})
 		return
@@ -102,12 +119,26 @@ func getTagHandler(c *gin.Context) {
 		return
 	}
 
+	dateInt, dateErr := strconv.Atoi(date)
+
+	// If date is not a valid integer, greater than 0, has 8 digits
+	if dateErr != nil || dateInt <= 0 || dateInt > 10000000 {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Invalid date: should be a valid number"})
+		return
+	}
+
 	// Format the date
-	formattedDate := FormatDate(date)
+	formattedDate, message := FormatDate(date)
+
+	// If message exists, throw error 400
+	if message != "" {
+		c.IndentedJSON(http.StatusBadRequest, message)
+	}
 
 	// Pass in the tag name and formatted date to get tag data
 	tag := utils.GetTagData(current_articles, tagName, formattedDate)
 
+	// Send tag as response to client
 	c.IndentedJSON(http.StatusOK, tag)
 }
 
