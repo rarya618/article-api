@@ -29,6 +29,14 @@ Looking at efficiency, the code runs in O(n^2) time.
 - Every article posted is of the correct format, containing all fields in the correct data type.
 - Tag name has been assumed to exist for all cases and will search for it when provided.
 
+## Libraries
+- fmt
+- strconv
+- net/http
+- github.com/gin-gonic/gin
+
+Personally I chose Gin instead of Mux solely because of more experience with Gin. 
+
 ## Error Handling
 The API is meant to respond with JSON objects, so the errors are also thrown as JSON objects.
 
@@ -71,7 +79,7 @@ NOTE: The server needs to be running independently and has to be restarted befor
 - If the API returns the same article through the GET request
 - If the API returns the correct tag data through the GET request
 
-### Test 5: Posting multiple articles on the same date to the API and getting one tag
+### Test 5: Posting multiple articles on the same date to the API and getting two tags
 #### Checks:
 - If the API accepts multiple standard article through POST requests
 - If the API returns correct articles through the GET requests

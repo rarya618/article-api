@@ -2,14 +2,13 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 
 	"github.com/rarya618/article-api/dataTypes"
 	"github.com/rarya618/article-api/utils"
-
-	"net/http"
-
-	"github.com/gin-gonic/gin"
 )
 
 // Current Articles variable
@@ -119,6 +118,7 @@ func getTagHandler(c *gin.Context) {
 		return
 	}
 
+	// Get date int and date error status
 	dateInt, dateErr := strconv.Atoi(date)
 
 	// If date is not a valid integer
