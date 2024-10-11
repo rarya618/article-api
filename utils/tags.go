@@ -60,5 +60,10 @@ func GetTagData(current_articles map[int]dataTypes.Article, tagName string, date
 	// Remove duplicates and current tag from the related-tags
 	tagData.RelatedTags = processTags(tagData.RelatedTags, tagName)
 
+	// If more than 10 articles have the tag
+	if tagData.Count > 10 {
+		tagData.Articles = tagData.Articles[len(tagData.Articles)-10:]
+	}
+
 	return tagData
 }
