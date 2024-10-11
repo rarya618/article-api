@@ -13,7 +13,7 @@ If you run into permission issues, run:
 ## Description
 The main language used to build this API is Golang. It was chosen because of its simplicity and it would be easier to extend and maintain in the future.
 
-Looking at efficiency, the code runs in O(n^2) time.
+Looking at efficiency, the code runs in O(n^2) time, owing to the nested loop to search for tags.
 
 ### Endpoints
 - POST `/articles` handles the receipt of some article data in json format, and store it within the service.
